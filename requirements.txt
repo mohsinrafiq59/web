@@ -9,7 +9,6 @@ cffi==1.12.3
 chardet==3.0.4
 Click==7.0
 cryptography==2.6.1
-Flask==1.0.3
 future==0.17.1
 gunicorn==19.9.0
 idna==2.8
