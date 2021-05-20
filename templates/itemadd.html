@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#000000">
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous">
+        <link href="{{ url_for('static',filename='css/custom.css') }}" rel="stylesheet" type="text/css" />
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+        <title>MASHAALLAH comfort point - Add Item</title>
+    </head>
+    <body>
+    <header>
+        <nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-sm box-shadow">
+          <a href="/" class="navbar-brand d-flex align-items-center">
+              <strong><i class="fas fa-headphones"></i>MASHAALLAH comfort point</strong>
+          </a>
+        </nav>
+    </header><br />
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <br><br>
+                    <h2>Add details of the item to be added</h2>
+                    <p>{{ msg }}</p>
+                    <div>
+                        <form action="/admin/item/add/" class="form" >
+                            <div>
+                                <input type="text" name="id" autofocus placeholder="Item Id"><br><br>
+                                <input type="text" name="name" autofocus placeholder="Item name"><br><br>
+                                <input type="text" name="price" autofocus placeholder="Price"><br><br>
+                                <input type="text" name="category" autofocus placeholder="Category"><br><br>
+                                <input type="text" name="quantity" autofocus placeholder="quantity"><br><br>
+                                <input type="text" name="image_path" autofocus placeholder="image_path"><br><br>
+                                <label for="onSale">Is the item on sale?</label>
+                                <select id="onSale" name="onSale">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>                                
+                                </select><br>
+                                <input type="text" name="onSalePrice" autofocus placeholder="On sale price"><br><br>
+                                <input type="text" name="description" autofocus placeholder="Short description"><br><br>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    </body>
+</html>

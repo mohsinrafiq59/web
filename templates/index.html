@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}
+MASHAALLAH comfort point - Home
+{% endblock %}
+
+{% block body %}
+<!-- Main Store Body -->
+      <div class="row" id="itemCard">
+      {% for i in range(itemsLen) %}
+          <div class="col-sm">
+              <div class="card text-center">
+                  <div class="card-body">
+                    <form action="/buy/" methods="POST">
+                      <img title="{{items[i]["description"]}}" src="/static/img/{{items[i]["image"]}}" class="item" alt="" width="90" height="220"/>
+                      <h5 class="card-title">{{items[i]["name"]}}</h5>
+                      {% if items[i]["onSale"] %}
+                        <!-- <h4 class="card-text price"><strike>{{ 'Rs.{:,.2f}'.format(items[i]["price"]) }}</strike></h4> -->
+                        <h4 class="card-text price" style="color:red; display:inline">{{ 'Rs.{:,.2f}'.format(items[i]["onSalePrice"]) }}</h4>
+                      {% else %}
+                        <h4 class="card-text price">{{ 'Rs.{:,.2f}'.format(items[i]["price"]) }}</h4>
+                      {% endif %}
+                      <div class="stepper-input">
+                          <span class="decrement target">-</span>
+                          <input class="quantity" name="quantity" value='0' />
+                          <span class="increment target">+</span>
+                      </div>
+                      <input type="hidden" name="id" value="{{items[i]["id"]}}" />
+                      {% if not session %}
+                      <input type="hidden" name="loggedin" value="0" />
+                      {% else %}
+                      <input type="hidden" name="loggedin" value="1" />
+                      {% endif %}
+                      <input type="submit" class="btn btn-primary addToCart" value="Add To Cart" /><br /><br />
+                      <div class="alert alert-danger flashMessage" style="text-align: center; display:none; font-size:0.9em;"></div>
+                    </form>
+                  </div>
+              </div>
+          </div>
+      {% endfor %}
+      </div>
+    </div>
+  </main>
+
+{% endblock %}

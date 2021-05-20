@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+MASHAALLAH comfort point - Home
+{% endblock %}
+
+{% block body %}
+<!-- Main Store Body -->
+      <div class="container">
+        {% if show == 1 %}
+        <div class="alert alert-success flashMessage" style="text-align:center">
+          <strong>Your purchase is successful!</strong>
+        </div>
+        {% endif %}
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          <h2>Your Orders</h2>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Item</th>
+                <th scope="col">name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+            <!-- For Each item -->
+            {% for i in range(myitemsLen) %}
+              <tr>
+                <th scope="row">{{ i + 1 }}</th>
+                <td><img src="/static/img/{{ myitems[i]["image"] }}" width="30px" alt="{{ myitems[i]["name"] }}" /></td>
+                <td>{{ myitems[i]["name"] }}</td>
+                <td>{{ myitems[i]["quantity"] }}</td>
+                <td>{{ myitems[i]["date"] }}</td>
+                <td>{{ myitems[i]["status"] }}</td>
+                <td><a href="/filter/?id={{ myitems[i]["id"] }}"><button type="button" class="btn btn-warning">Buy Again</button></a></td>
+              </tr>
+            </tbody>
+            {% endfor %}
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+{% endblock %}

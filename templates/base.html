@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#000000">
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous">
+        <link href="{{ url_for('static',filename='css/custom.css') }}" rel="stylesheet" type="text/css" />
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          rel="stylesheet"
+        />
+        <!-- Google Fonts -->
+        <link
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          rel="stylesheet"
+        />
+        <!-- MDB -->
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.css"
+          rel="stylesheet"
+        />
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body>
+  <!-- Modal -->
+  <div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Shopping Cart</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="shoppingCart">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">name</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Unit Price</th>
+                        <th scope="col">Sub-Total</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <!-- For Each item -->
+                    {% if shopLen != 0 %}
+                    {% for i in range(shopLen) %}
+                      <tr>
+                        <th scope="row">{{ i + 1 }}</th>
+                        <td><img src="/static/img/{{ shoppingCart[i]["image"] }}" width="30px" alt="{{ shoppingCart[i]["name"] }}" /></td>
+                        <td>{{ shoppingCart[i]["name"] }}</td>
+                        <td>{{ shoppingCart[i]['SUM(qty)'] }}</td>
+                        <td>{{ 'Rs.{:,.2f}'.format(shoppingCart[i]["price"]) }}</td>
+                        <td>{{ 'Rs.{:,.2f}'.format(shoppingCart[i]['SUM(subTotal)']) }}</td><!--
+                        <td>
+                          <form action="/remove/" methods="GET">
+                            <input type="hidden" name="id" value="{{ shoppingCart[i]["id"] }}" />
+                            <button type="submit" class="btn btn-secondary btn-sm" id="removeFromCart">Remove</button>
+                          </form>
+                        </td>-->
+                      </tr>
+                    </tbody>
+                    {% endfor %}
+                    <tfoot>
+                      <tr>
+                        <td colSpan="7">Total: {{ 'Rs.{:,.2f}'.format(total) }}<br /><br />
+                          <div class="modal-footer">
+                            <a href="/cart/"><button type="button" class="btn btn-primary checkout">Make Changes</button></a>
+                            <!-- <button type="button" class="btn btn-primary checkout" data-dismiss="modal">Continue Shopping</button> -->
+                            <a href="/proceed-checkout/"><button type="button" class="btn btn-primary checkout">Proceed Checkout</button></a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                    {% else %}
+                      <tr>
+                        <td colSpan="7"><h3>Your cart is empty :\</h3></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colSpan="7">Get some items now!<br />
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Continue Shopping</button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                    {% endif %}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <header>
+    <nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-sm box-shadow">
+      <a href="/" class="navbar-brand d-flex align-items-center">
+          <strong><i class="fas fa-headphones"></i>MASHAALLAH comfort point</strong>
+      </a>
+      {% if session %}
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a href="/logout/" class="nav-link">Logout</a></li>
+        <li class="nav-item"><a href="/history/" class="nav-link">Your Orders</a></li>
+      {% else %}
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a href="/new/" class="nav-link">Register</a></li>
+        <li class="nav-item"><a href="/login/" class="nav-link">Login</a></li>
+
+      {% endif %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+            Filter By
+          </a>
+          <div class="dropdown-menu">
+              <a class="dropdown-item" href="/">All</a>
+              <a class="dropdown-item" href="/filter/?category=Mobile Phone">MOBILE PHONE</a>
+              <a class="dropdown-item" href="/filter/?category=Charger">CHARGER</a>
+              <a class="dropdown-item" href="/filter/?category=usb_cables">USB cables</a>
+              <a class="dropdown-item" href="/filter/?category=earPhone">Ear Phones</a>
+              <a class="dropdown-item" href="/filter/?category=Levels">Levels</a>
+              <a class="dropdown-item" href="/filter/?category=oneEar Bluetooth and buds">one ear Bluetooth and buds</a>
+              <a class="dropdown-item" href="/filter/?category=power bank">power bank</a>
+              <a class="dropdown-item" href="/filter/?category=Bluetooth speaker">Bluetooth speaker</a>
+              <a class="dropdown-item" href="/filter/?category=car charger">car Charger</a>
+              <a class="dropdown-item" href="/filter/?category=aux cable">aux cable</a>
+              <a class="dropdown-item" href="/filter/?category=Mouse">Mouse</a>
+              <a class="dropdown-item" href="/filter/?category=keyboard">Keyboard</a>
+              <a class="dropdown-item" href="/filter/?category=otg">otg</a>
+              <a class="dropdown-item" href="/filter/?category=usb hub">usb hub</a>
+              <a class="dropdown-item" href="/filter/?category=settop box shelf">settop box shelf</a>
+              <a class="dropdown-item" href="/filter/?category=storage device">storage Devices</a>
+              <a class="dropdown-item" href="/filter/?category=rings">rings</a>
+              <a class="dropdown-item" href="/filter/?category=Led bulb">led bulbs</a>
+              <a class="dropdown-item" href="/filter/?category=Trimmer">trimmers</a>
+              <a class="dropdown-item" href="/filter/?category=car mobile holder">car mobile holder</a>
+
+
+
+
+          </div>
+        </li>
+        <li>
+          <form action="/search">
+          <div class="input-group">
+            <div class="form-outline">
+              <input style=" background-color: white;" type="search" name="search_string" id="form1" class="form-control" />
+              <label class="form-label" for="form1"></label>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          </form>
+        </li>
+      </ul>
+      <div>
+        <button class="navbar-toggler" style="display:inline" type="button" data-toggle="modal" data-target="#modalCenter">
+          <span class="glyphicon glyphicon-shopping-cart" data-toggle="modal" data-target="">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="counter">No. of Items: {{ totItems }}</span>
+            <span class="counter">Total: Rs.{{ '{:,.2f}'.format(total) }}</span>
+          </span>
+        </button>
+      </div>
+    </nav>
+  </header><br />
+  <main>
+    <div class="container">
+      {% if display == 1 %}
+
+      {% endif %}
+    {% block body %}{% endblock %}
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md">
+                    <hr />
+                    <p>&#169; <a href="/">MASHAALLAH comfort point</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>-->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <!-- Custom JS Scripts -->
+        <script src="{{ url_for('static',filename='js/myscripts.js') }}"></script>
+        <script src="{{ url_for('static',filename='js/validate.js') }}"></script>
+    </body>
+</html>

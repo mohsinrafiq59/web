@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#000000">
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous">
+        <link href="{{ url_for('static',filename='css/custom.css') }}" rel="stylesheet" type="text/css" />
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- CSS only -->
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    
+        <title>Payment</title>
+        <title>MASHAALLAH comfort point - Order details</title>
+    </head>
+    <body>
+
+        {% extends "base.html" %}
+
+{% block title %}
+MASHAALLAH comfort point - Order details
+{% endblock %}
+
+{% block body %}
+<!-- Main Store Body -->
+  <div aria-hidden="true">
+    <div>
+      <div>
+        <div>
+          <h5 class="modal-title" id="exampleModalLongTitle">Items in the order</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          </button>
+        </div>
+        <div>
+          <div id="shoppingCart">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">name</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Unit Price</th>
+                        <th scope="col">Sub-Total</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <!-- For Each item -->
+                    {% if shopLen != 0 %}
+                    {% for i in range(shopLen) %}
+                      <tr>
+                        <th scope="row">{{ i + 1 }}</th>
+                        <td><img src="/static/img/{{ shoppingCart[i]["image"] }}" width="30px" alt="{{ shoppingCart[i]["name"] }}" /></td>
+                        <td>{{ shoppingCart[i]["name"] }}</td>
+                        <td><form action="/update/">
+                            <input type="hidden" name="id" value="{{shoppingCart[i]["id"]}}" />
+                            <input type="number" name="quantity" min="1" max="10" size="5" value="{{ shoppingCart[i]['SUM(qty)'] }}">
+                            <button type="submit" class="btn btn-warning checkout">Update</button>
+                          </form></td>
+                        <td>{{ 'Rs.{:,.2f}'.format(shoppingCart[i]["price"]) }}</td>
+                        <td>{{ 'Rs.{:,.2f}'.format(shoppingCart[i]['SUM(subTotal)']) }}</td>
+                        <td>
+                          <form action="/remove/" methods="GET">
+                            <input type="hidden" name="id" value="{{ shoppingCart[i]["id"] }}" />
+                            <button type="submit" class="btn btn-secondary btn-sm" id="removeFromCart">Remove</button>
+                          </form>
+                        </td>
+                      </tr>
+                    </tbody>
+                    {% endfor %}
+                    <tfoot>
+                      <tr>
+                        <td colSpan="7">Total: {{ 'Rs.{:,.2f}'.format(total) }}<br /><br />
+                          <div class="modal-footer">
+
+                            <br><h4 style="text-align:left">Delivary Address:</h4><br>
+                            <p style="text-align:left">{{address}}</p>
+
+                            <button id="rzp-button1">Pay</button>
+                            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                            <script>var options = {
+                                  "key": "rzp_test_p2nZZCAVVqlm7E",
+                                  "amount": "{{payment['amount']}}",
+                                  "currency": "INR",
+                                  "name": "MASHA ALLAH",    
+                                  "description": "Test Transaction",    
+                                  "image": "https://example.com/your_logo",    
+                                  "order_id": "{{payment['id']}}", 
+                                  "callback_url": "/success/",    
+                                  "prefill": {        
+                                    "name": "Omar Rafiq",        
+                                    "email": "mominrafiq59@gmail.com",        
+                                    "contact": "9797818581"    
+                                    },
+                                        "notes": {        
+                                          "address": "Razorpay Corporate Office"    
+                                          },    
+                                          "theme": {        
+                                            "color": "#3399cc"    
+                                            }
+                                          };
+                                            var rzp1 = new Razorpay(options);
+                                            document.getElementById('rzp-button1').onclick = function(e){
+                                                  rzp1.open();    
+                                                  e.preventDefault();
+                                                  }
+                            </script>
+
+                        </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                    {% else %}
+                      <tr>
+                        <td colSpan="7"><h3>Your cart is empty :\</h3></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colSpan="7">Get some items now!<br />
+                          <div>
+
+                            
+</div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                    {% endif %}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+  </main>
+
+{% endblock %}
+
+                            
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    </body>
+</html>
